@@ -1,137 +1,214 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>黑框國際行銷事務所 | 形象網站</title>
+    <title>黑匡國際 | THE CINEMATIC STRATEGY</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Playfair Display (西文標題) + Noto Serif TC (中文標題) + Inter (內文) + JetBrains Mono (代碼/數據) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Noto+Serif+TC:wght@400;600;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cinema-black': '#050505',
+                        'off-white': '#E0E0E0',
+                        'brand-red': '#E60023',
+                        'sub-gray': '#888888',
+                        'dark-card': '#0F0F0F'
+                    },
+                    fontFamily: {
+                        sans: ['"Inter"', 'sans-serif'],
+                        serif: ['"Playfair Display"', '"Noto Serif TC"', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* 自定義樣式 */
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #0A0A0A;
-            color: #F5F5F5;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        /* 自定義顏色 */
-        .brand-red { color: #E60023; }
-        .bg-brand-red { background-color: #E60023; }
-        .border-brand-red { border-color: #E60023; }
-        .bg-deep-black { background-color: #0A0A0A; }
-        .bg-primary-gray { background-color: #111111; }
-        .bg-secondary-gray { background-color: #222222; }
-
-        /* 區塊標題通用樣式 */
-        h2 {
-            font-size: 2.25rem; /* 36px */
-            line-height: 2.5rem; /* 40px */
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 4rem; /* 64px */
+        /* Film Grain Effect Overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* 滾動動畫 */
-        .scroll-animate {
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E60023; 
+        }
+
+        /* Animations */
+        .fade-in-up {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .scroll-animate.is-visible {
+        .fade-in-up.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* 藍圖互動區塊樣式 */
-        .blueprint-nav button {
-            transition: background-color 0.3s ease, color 0.3s ease;
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
-        .blueprint-nav button.active {
-            background-color: #E60023;
-            color: white;
+        
+        /* Blueprint Interactive Styles */
+        .blueprint-item.active {
+            border-left-color: #E60023;
+            background: linear-gradient(90deg, rgba(230,0,35,0.1) 0%, transparent 100%);
         }
-        .blueprint-content {
+        .blueprint-item.active h3 {
+            color: #E60023;
+        }
+        
+        /* Smooth fade for content switching */
+        .tab-content {
             display: none;
+            animation: fadeIn 0.5s ease-in-out;
         }
-        .blueprint-content.active {
+        .tab-content.active {
             display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-deep-black">
+<body class="bg-cinema-black text-off-white font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden">
 
-    <!-- Header / 頁首 (LOGO放大) -->
-    <header class="bg-deep-black/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 shadow-lg">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <div>
-                <img src="https://i.postimg.cc/hGPsNJmx/BLACK-Frames-Logo-White.png" alt="黑框國際 LOGO" class="h-12 md:h-14">
-            </div>
-            <a href="https://lin.ee/b80hLU4" target="_blank" class="bg-brand-red text-white font-bold text-sm md:text-base py-2 px-4 md:px-6 rounded-lg hover:bg-red-700 transition-colors duration-300">
-                預約藍圖探索會議
-            </a>
-        </nav>
-    </header>
+    <!-- Grain Texture -->
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 p-6 md:p-8 flex justify-between items-center mix-blend-difference text-white">
+        <div class="w-32 md:w-40 opacity-90 hover:opacity-100 transition-opacity cursor-pointer">
+            <img src="https://i.postimg.cc/hGPsNJmx/BLACK-Frames-Logo-White.png" alt="Black Frames Logo">
+        </div>
+        <a href="https://lin.ee/b80hLU4" target="_blank" class="hidden md:flex items-center gap-2 text-[10px] tracking-[0.2em] font-bold uppercase hover:text-brand-red transition-colors border border-transparent hover:border-brand-red px-4 py-2 rounded-sm group">
+            <span class="w-2 h-2 rounded-full bg-brand-red animate-pulse group-hover:bg-white"></span>
+            Action
+        </a>
+    </nav>
 
     <main>
 
-        <!-- 區塊一：痛點的共鳴鏡 -->
-        <section id="pain-mirror" class="h-screen min-h-[700px] flex items-center justify-center text-center p-6 relative overflow-hidden">
-            <div class="absolute inset-0 bg-black opacity-50 z-0"></div>
-            <!-- 背景使用深色漸層模擬深邃感 -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-70 z-0"></div>
-             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1534532139575-01b427f71746?q=80&w=2574&auto-format&fit=crop'); filter: blur(4px) grayscale(50%);"></div>
+        <!-- SCENE 01: THE MIRROR OF PAIN (Hero) -->
+        <section class="relative h-screen flex items-center justify-center overflow-hidden border-b border-gray-900">
+            <!-- Cinematic Background -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2670&auto-format&fit=crop" 
+                     class="w-full h-full object-cover opacity-30 scale-105 animate-[pulse_8s_ease-in-out_infinite]">
+                <div class="absolute inset-0 bg-gradient-to-b from-cinema-black/60 via-transparent to-cinema-black"></div>
+                <div class="absolute inset-0 bg-gradient-radial from-transparent to-cinema-black opacity-80"></div>
+            </div>
 
-            <div class="relative z-10 scroll-animate">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
-                    為什麼您的行銷投入，<br class="hidden md:block">總像把錢丟進水裡？
+            <!-- Content -->
+            <div class="relative z-10 text-center px-6 max-w-5xl pt-20">
+                <p class="text-brand-red font-mono text-xs md:text-sm tracking-[0.3em] mb-6 fade-in-up delay-100 uppercase">
+                    The Mirror of Pain
+                </p>
+                <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight mb-8 fade-in-up delay-200 text-glow">
+                    為什麼您的行銷投入，<br>
+                    總像把錢丟進<span class="text-brand-red italic">水裡</span>？
                 </h1>
-                <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-300">
+                <div class="w-16 h-[1px] bg-brand-red mx-auto mb-8 fade-in-up delay-300"></div>
+                <p class="text-lg md:text-xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed fade-in-up delay-500">
                     每一筆行銷預算，都應該是為品牌建造「護城河」的一塊磚，<br>而不是一場絢爛卻短暫的煙火。
                 </p>
             </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40 fade-in-up delay-700">
+                <span class="text-[10px] tracking-widest uppercase font-mono">Scroll for Truth</span>
+                <div class="w-[1px] h-16 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
         </section>
 
-        <!-- 區塊二：焦慮的診斷室 -->
-        <section id="diagnosis-room" class="py-20 md:py-32 bg-primary-gray">
-            <div class="container mx-auto px-6">
-                <h2 class="scroll-animate">商業挑戰，常源自線上與線下的雙重斷層。</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto">
-                    <!-- 左側卡片 -->
-                    <div class="bg-secondary-gray p-8 rounded-xl border border-gray-700 shadow-2xl scroll-animate">
-                        <h3 class="text-2xl font-bold brand-red mb-6">線上失靈：投入巨大，回報甚微？</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-red-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>品牌價值，市場為何感受不到？</span>
+        <!-- SCENE 02: THE DIAGNOSIS ROOM (Conflict) -->
+        <section class="py-32 px-6 md:px-20 relative z-10 bg-dark-card border-t border-b border-gray-900">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row items-end justify-between mb-20 border-b border-gray-800 pb-6 fade-in-up">
+                    <h2 class="font-serif text-3xl md:text-5xl text-white leading-tight">
+                        商業挑戰，常源自<br>線上與線下的<span class="text-brand-red">雙重斷層</span>。
+                    </h2>
+                    <p class="font-mono text-xs text-brand-red mt-4 md:mt-0 tracking-widest">SCENE: 02 // DIAGNOSIS</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+                    <!-- Script Card 1: Online -->
+                    <div class="fade-in-up group">
+                        <div class="font-mono text-xs text-gray-500 mb-2 group-hover:text-brand-red transition-colors">INT. ONLINE WORLD - NIGHT</div>
+                        <h3 class="text-3xl font-serif font-bold text-white mb-6 group-hover:text-brand-red transition-colors duration-500">
+                            線上失靈：<br>投入巨大，回報甚微？
+                        </h3>
+                        <ul class="space-y-6 pl-6 border-l border-gray-800 group-hover:border-brand-red transition-colors duration-500">
+                            <li class="relative">
+                                <span class="absolute -left-[29px] top-2 w-1.5 h-1.5 bg-gray-600 group-hover:bg-brand-red rounded-full transition-colors"></span>
+                                <p class="text-gray-400 text-lg">品牌價值，市場為何感受不到？</p>
                             </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-red-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>內容有趣，卻無法轉化為訂單？</span>
+                            <li class="relative">
+                                <span class="absolute -left-[29px] top-2 w-1.5 h-1.5 bg-gray-600 group-hover:bg-brand-red rounded-full transition-colors"></span>
+                                <p class="text-gray-400 text-lg">內容有趣，卻無法轉化為訂單？</p>
                             </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-red-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>產品優質，為何總在比價中落敗？</span>
+                            <li class="relative">
+                                <span class="absolute -left-[29px] top-2 w-1.5 h-1.5 bg-gray-600 group-hover:bg-brand-red rounded-full transition-colors"></span>
+                                <p class="text-gray-400 text-lg">產品優質，為何總在比價中落敗？</p>
                             </li>
                         </ul>
                     </div>
-                    <!-- 右側卡片 -->
-                    <div class="bg-secondary-gray p-8 rounded-xl border border-gray-700 shadow-2xl scroll-animate" style="transition-delay: 200ms;">
-                        <h3 class="text-2xl font-bold brand-red mb-6">線下斷層：流量湧現，營收停滯？</h3>
-                        <ul class="space-y-4">
-                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-red-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>線上帶來了機會，線下卻接不住生意？</span>
+
+                    <!-- Script Card 2: Offline -->
+                    <div class="fade-in-up delay-100 group">
+                        <div class="font-mono text-xs text-gray-500 mb-2 group-hover:text-brand-red transition-colors">EXT. OFFLINE MARKET - DAY</div>
+                        <h3 class="text-3xl font-serif font-bold text-white mb-6 group-hover:text-brand-red transition-colors duration-500">
+                            線下斷層：<br>流量湧現，營收停滯？
+                        </h3>
+                        <ul class="space-y-6 pl-6 border-l border-gray-800 group-hover:border-brand-red transition-colors duration-500">
+                            <li class="relative">
+                                <span class="absolute -left-[29px] top-2 w-1.5 h-1.5 bg-gray-600 group-hover:bg-brand-red rounded-full transition-colors"></span>
+                                <p class="text-gray-400 text-lg">線上帶來了機會，線下卻接不住生意？</p>
                             </li>
-                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-red-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>成交在眼前，團隊卻總是錯失良機？</span>
+                            <li class="relative">
+                                <span class="absolute -left-[29px] top-2 w-1.5 h-1.5 bg-gray-600 group-hover:bg-brand-red rounded-full transition-colors"></span>
+                                <p class="text-gray-400 text-lg">成交在眼前，團隊卻總是錯失良機？</p>
                             </li>
-                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-red-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>優秀的策略，為何在執行時走樣變形？</span>
+                            <li class="relative">
+                                <span class="absolute -left-[29px] top-2 w-1.5 h-1.5 bg-gray-600 group-hover:bg-brand-red rounded-full transition-colors"></span>
+                                <p class="text-gray-400 text-lg">優秀的策略，為何在執行時走樣變形？</p>
                             </li>
                         </ul>
                     </div>
@@ -139,247 +216,341 @@
             </div>
         </section>
 
-        <!-- 區塊三：理性的覺醒 -->
-        <section id="awakening" class="py-20 md:py-32 bg-gray-100 text-gray-800 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%239C92AC%22 fill-opacity=%220.4%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-            <div class="container mx-auto px-6 text-center max-w-4xl scroll-animate relative">
-                <h2 class="text-gray-900">是時候，停止短期流量追逐，<br>轉向長期品牌建造。</h2>
-                <div class="text-lg md:text-xl space-y-6 leading-relaxed">
+        <!-- SCENE 03: THE AWAKENING -->
+        <section class="py-32 px-6 text-center relative overflow-hidden bg-gradient-to-b from-dark-card to-cinema-black">
+            <!-- Subtle Water Ripple Effect Background -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-blue-900/10 to-transparent opacity-30 pointer-events-none"></div>
+
+            <div class="max-w-4xl mx-auto relative z-10 fade-in-up">
+                <span class="text-brand-red font-mono text-xs tracking-widest uppercase mb-6 block">The Awakening</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold mb-10 leading-tight">
+                    是時候，停止短期流量追逐，<br>轉向<span class="text-white border-b-2 border-brand-red pb-1">長期品牌建造</span>。
+                </h2>
+                
+                <div class="text-gray-400 text-lg leading-relaxed space-y-6 text-justify md:text-center max-w-3xl mx-auto">
                     <p>我們相信，行銷的本質應回歸理性與人性。</p>
-                    <p>理性，意味著每項決策基於對商業問題的深刻理解；人性，意味著每場溝通始於品牌故事的真誠訴說。短期流量如同沙堡，看似美好，卻經不起市場風浪沖刷。唯有回歸務實，您才能為企業打造真正深邃的護城河。</p>
-                    <p class="font-bold">這就是黑匡國際的使命：助您從焦慮走向清晰成長。</p>
-                    <p class="mt-8 text-gray-600">準備好覺醒嗎？繼續探索我們的藍圖。</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 區塊四：清晰的藍圖 -->
-        <section id="blueprint" class="py-20 md:py-32 bg-primary-gray">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-4xl mx-auto scroll-animate">
-                    <h2>我們從不隨意動工，直到「符合邏輯」的計畫清晰可見。</h2>
-                    <p class="text-lg text-gray-300 mb-16">
-                        這就是我們堅持，在一切合作開始前，都必須先共同完成一份**《品牌護城河建造計畫》**的原因。這不只是份提案，更是幫助您做出明智決策的依據、降低決策的風險。它不僅規劃出戰術，更重要的是，它讓您清晰地看見，成長的曲線。
+                    <p>
+                        <b class="text-white">理性</b>，意味著每項決策基於對商業問題的深刻理解；<br class="hidden md:block">
+                        <b class="text-white">人性</b>，意味著每場溝通始於品牌故事的真誠訴說。
+                    </p>
+                    <p>
+                        短期流量如同沙堡，看似美好，卻經不起市場風浪沖刷。<br>
+                        唯有回歸務實，您才能為企業打造真正深邃的護城河。
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 max-w-6xl mx-auto scroll-animate">
-                    <!-- 左欄: 藍圖導航 (視覺更新) -->
-                    <div class="lg:col-span-1 blueprint-nav flex flex-row lg:flex-col justify-center lg:justify-start flex-wrap gap-2">
-                        <button data-target="content-1" class="w-full text-left p-3 px-5 font-bold text-gray-200 bg-secondary-gray rounded-full hover:bg-gray-700">市場機會探勘</button>
-                        <button data-target="content-2" class="w-full text-left p-3 px-5 font-bold text-gray-200 bg-secondary-gray rounded-full hover:bg-gray-700">目標客戶洞察</button>
-                        <button data-target="content-3" class="w-full text-left p-3 px-5 font-bold text-gray-200 bg-secondary-gray rounded-full hover:bg-gray-700">核心訊息設計</button>
-                        <button data-target="content-4" class="w-full text-left p-3 px-5 font-bold text-gray-200 bg-secondary-gray rounded-full hover:bg-gray-700">業務拓展路線</button>
-                        <button data-target="content-5" class="w-full text-left p-3 px-5 font-bold text-gray-200 bg-secondary-gray rounded-full hover:bg-gray-700">關鍵行動清單</button>
-                        <button data-target="content-6" class="w-full text-left p-3 px-5 font-bold text-gray-200 bg-secondary-gray rounded-full hover:bg-gray-700 active">成長路徑圖解</button>
+                <div class="mt-12 p-8 border border-gray-800 bg-cinema-black/50 inline-block backdrop-blur-sm">
+                    <p class="text-xl font-serif italic text-white mb-2">這就是黑匡國際的使命</p>
+                    <p class="text-sm font-mono text-brand-red uppercase tracking-widest">助您從焦慮走向清晰成長</p>
+                </div>
+
+                <p class="mt-12 text-gray-500 text-sm font-mono tracking-widest animate-pulse">準備好覺醒嗎？繼續探索我們的藍圖 ↓</p>
+            </div>
+        </section>
+
+        <!-- SCENE 04: THE BLUEPRINT (Interactive) -->
+        <section class="py-24 px-6 md:px-12 bg-black border-t border-gray-900 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-16 fade-in-up">
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold text-white mb-6">
+                        我們從不隨意動工，<br>直到「符合邏輯」的計畫清晰可見。
+                    </h2>
+                    <p class="text-gray-400 max-w-3xl text-lg">
+                        這就是我們堅持，在一切合作開始前，都必須先共同完成一份<b>《品牌護城河建造計畫》</b>的原因。
+                        它不僅規劃出戰術，更重要的是，它讓您清晰地看見，成長的曲線。
+                    </p>
+                </div>
+
+                <!-- Interactive Blueprint UI -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-gray-800 fade-in-up delay-200">
+                    
+                    <!-- Left: Navigation (Scene Selection) -->
+                    <div class="lg:col-span-4 bg-dark-card border-r border-gray-800 flex flex-col">
+                        <div class="p-6 border-b border-gray-800 bg-black/50">
+                            <h3 class="font-mono text-xs text-brand-red uppercase tracking-widest">Blueprint Chapters</h3>
+                        </div>
+                        
+                        <!-- Nav Items -->
+                        <button onclick="switchTab('tab1', this)" class="blueprint-item text-left p-6 border-l-4 border-transparent hover:bg-gray-900 transition-all border-b border-gray-800">
+                            <span class="font-mono text-xs text-gray-500 mb-1 block">CH.01</span>
+                            <h3 class="font-serif text-lg text-gray-300 font-bold">市場機會分析</h3>
+                        </button>
+                        <button onclick="switchTab('tab2', this)" class="blueprint-item text-left p-6 border-l-4 border-transparent hover:bg-gray-900 transition-all border-b border-gray-800">
+                            <span class="font-mono text-xs text-gray-500 mb-1 block">CH.02</span>
+                            <h3 class="font-serif text-lg text-gray-300 font-bold">目標客群洞察</h3>
+                        </button>
+                        <button onclick="switchTab('tab3', this)" class="blueprint-item text-left p-6 border-l-4 border-transparent hover:bg-gray-900 transition-all border-b border-gray-800">
+                            <span class="font-mono text-xs text-gray-500 mb-1 block">CH.03</span>
+                            <h3 class="font-serif text-lg text-gray-300 font-bold">核心溝通訊息</h3>
+                        </button>
+                        <button onclick="switchTab('tab4', this)" class="blueprint-item text-left p-6 border-l-4 border-transparent hover:bg-gray-900 transition-all border-b border-gray-800">
+                            <span class="font-mono text-xs text-gray-500 mb-1 block">CH.04</span>
+                            <h3 class="font-serif text-lg text-gray-300 font-bold">商務拓展路徑</h3>
+                        </button>
+                        <button onclick="switchTab('tab5', this)" class="blueprint-item text-left p-6 border-l-4 border-transparent hover:bg-gray-900 transition-all border-b border-gray-800">
+                            <span class="font-mono text-xs text-gray-500 mb-1 block">CH.05</span>
+                            <h3 class="font-serif text-lg text-gray-300 font-bold">關鍵戰術清單</h3>
+                        </button>
+                        <!-- Default Active -->
+                        <button onclick="switchTab('tab6', this)" class="blueprint-item active text-left p-6 border-l-4 border-brand-red bg-gray-900/30 transition-all border-b border-gray-800">
+                            <span class="font-mono text-xs text-brand-red mb-1 block">FINAL CUT</span>
+                            <h3 class="font-serif text-lg text-brand-red font-bold">可視化的成長路徑</h3>
+                        </button>
                     </div>
 
-                    <!-- 右欄: 內容展示 -->
-                    <div class="lg:col-span-2 bg-secondary-gray p-8 md:p-12 rounded-xl min-h-[400px]">
-                        <div id="content-1" class="blueprint-content">
-                            <h4 class="text-2xl font-bold brand-red mb-4">市場生態評估</h4>
-                            <p class="text-gray-300">深度剖析您所處的市場環境、競爭格局與潛在機會點。我們將找出被對手忽略的價值窪地，為您的品牌定位找到最有利的切入點，確保您的每一步都踩在最堅實的基礎上。</p>
+                    <!-- Right: Screen / Content -->
+                    <div class="lg:col-span-8 bg-cinema-black p-8 md:p-16 flex items-center justify-center min-h-[500px] relative overflow-hidden">
+                        
+                        <!-- Background Grid -->
+                        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+                        <!-- Tab 1 -->
+                        <div id="tab1" class="tab-content relative z-10 max-w-2xl">
+                            <i data-lucide="search" class="w-12 h-12 text-brand-red mb-6"></i>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-4">市場機會分析</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed">我們不打無準備的仗。深入掃描市場競爭者，找出未被滿足的缺口。這是您品牌的「登陸點」，決定了戰役的成敗。</p>
                         </div>
-                        <div id="content-2" class="blueprint-content">
-                            <h4 class="text-2xl font-bold brand-red mb-4">客群的精準定位</h4>
-                            <p class="text-gray-300">我們不只描繪模糊的用戶畫像。我們將深入探討目標客群的內心渴望、消費動機與決策路徑，讓您的品牌不只被看見，更能真正走進他們的心裡，建立無法輕易被取代的情感連結。</p>
+                        <!-- Tab 2 -->
+                        <div id="tab2" class="tab-content relative z-10 max-w-2xl">
+                            <i data-lucide="users" class="w-12 h-12 text-brand-red mb-6"></i>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-4">目標客群洞察</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed">不僅是年齡性別的數據，更是心理層面的渴望與恐懼。我們描繪出立體的「主角」，讓品牌故事能精準擊中他們的心。</p>
                         </div>
-                        <div id="content-3" class="blueprint-content">
-                            <h4 class="text-2xl font-bold brand-red mb-4">品牌故事的設計 (網路行銷)</h4>
-                            <p class="text-gray-300">提煉出您品牌獨一無二的核心價值，並將其轉化為一句強而有力、能引發市場共鳴的溝通訊息。這是您線上「空戰」的指導綱領，確保所有內容創作都圍繞著同一核心，持續累積品牌資產。</p>
+                        <!-- Tab 3 -->
+                        <div id="tab3" class="tab-content relative z-10 max-w-2xl">
+                            <i data-lucide="message-square" class="w-12 h-12 text-brand-red mb-6"></i>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-4">核心溝通訊息</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed">這是您的「空戰」武器。提煉出一句強而有力的 Slogan 與視覺語言，確保在碎片化的數位戰場中，瞬間抓住注意力。</p>
                         </div>
-                        <div id="content-4" class="blueprint-content">
-                            <h4 class="text-2xl font-bold brand-red mb-4">實體商務拓展路徑 (實體市場行銷)</h4>
-                            <p class="text-gray-300">規劃出將線上聲量轉化為線下營收的具體路徑。無論是通路開發、合作夥伴策略還是銷售團隊賦能，我們將設計一套可執行的「陸戰」方案，讓流量真正變現為生意。</p>
+                        <!-- Tab 4 -->
+                        <div id="tab4" class="tab-content relative z-10 max-w-2xl">
+                            <i data-lucide="map" class="w-12 h-12 text-brand-red mb-6"></i>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-4">商務拓展路徑</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed">這是您的「陸戰」地圖。從線上流量到線下成交，我們規劃出具體的通路開發與銷售路徑，讓聲量變現。</p>
                         </div>
-                         <div id="content-5" class="blueprint-content">
-                            <h4 class="text-2xl font-bold brand-red mb-4">關鍵戰術清單</h4>
-                            <p class="text-gray-300">基於前面的戰略分析，我們將提供一份清晰、可執行的戰術清單。這份清單將明確指出在特定階段，應該優先執行的關鍵任務是什麼，避免資源的浪費，讓每一分投入都用在刀口上。</p>
+                        <!-- Tab 5 -->
+                        <div id="tab5" class="tab-content relative z-10 max-w-2xl">
+                            <i data-lucide="list-checks" class="w-12 h-12 text-brand-red mb-6"></i>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-4">關鍵戰術清單</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed">不談空泛理論，只給具體指令。我們提供一份可執行的行動清單（To-Do List），讓團隊知道明天早上該做什麼。</p>
                         </div>
-                        <div id="content-6" class="blueprint-content active">
-                            <h4 class="text-2xl font-bold brand-red mb-4">我們讓您看見，每一分投入如何累積成未來。</h4>
-                            <p class="text-gray-300 mb-8">「行銷最令人焦慮的，是投入與回報之間的不確定性。我們的計畫模擬，可以舒緩這種壓力。我們將與您一起，定義出清晰的、可衡量的階段性目標，讓您在每個階段，都能清楚地看見自己的進展——從品牌聲量的提升，到優質流量的獲取，再到最終的商業成交。」</p>
-                            <!-- 成長曲線示意圖 -->
-                            <div class="w-full bg-gray-800 p-4 rounded-lg">
-                                <div class="flex justify-between text-xs text-gray-400 mb-2 px-2">
-                                    <span>建立戰略方向</span>
-                                    <span>達成市場溝通</span>
-                                    <span>開創業務路徑</span>
-                                    <span>形成品牌資產</span>
+                        <!-- Tab 6 (Active Default) -->
+                        <div id="tab6" class="tab-content active relative z-10 w-full">
+                            <span class="text-brand-red font-mono text-xs tracking-widest uppercase mb-2 block">Value Projection</span>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-4">我們讓您看見，每一分投入如何累積成未來。</h3>
+                            <p class="text-gray-400 mb-8">
+                                「行銷最令人焦慮的，是投入與回報之間的不確定性。我們的計畫模擬，可以舒緩這種壓力。
+                                我們定義出清晰的、可衡量的階段性目標。」
+                            </p>
+                            
+                            <!-- Visualization Chart -->
+                            <div class="border border-gray-800 bg-black/50 p-6 relative h-64 flex items-end justify-between gap-4">
+                                <!-- Grid Lines -->
+                                <div class="absolute inset-0 flex flex-col justify-between pointer-events-none p-6 opacity-30">
+                                    <div class="w-full h-px bg-gray-600 border-dashed border-gray-600"></div>
+                                    <div class="w-full h-px bg-gray-600"></div>
+                                    <div class="w-full h-px bg-gray-600"></div>
+                                    <div class="w-full h-px bg-gray-600"></div>
                                 </div>
-                                <div class="relative w-full h-24">
-                                    <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                                        <path d="M 20 80 Q 150 70, 300 40 T 600 20" stroke="#E60023" fill="none" stroke-width="3" stroke-linecap="round"/>
-                                    </svg>
+
+                                <!-- Bars / Growth Curve -->
+                                <div class="w-1/4 h-[20%] bg-gray-800 hover:bg-gray-700 transition-all relative group flex flex-col justify-end">
+                                    <span class="absolute -top-6 left-0 text-[10px] text-gray-500 w-full text-center">階段一</span>
+                                    <div class="p-2 text-[10px] text-center font-bold text-white opacity-0 group-hover:opacity-100">建立戰略</div>
                                 </div>
-                                 <div class="flex justify-between text-sm text-white font-bold mt-2">
-                                    <span>階段一</span>
-                                    <span>階段二</span>
-                                    <span>階段三</span>
-                                    <span>階段四</span>
+                                <div class="w-1/4 h-[45%] bg-gray-700 hover:bg-gray-600 transition-all relative group flex flex-col justify-end">
+                                    <span class="absolute -top-6 left-0 text-[10px] text-gray-500 w-full text-center">階段二</span>
+                                    <div class="p-2 text-[10px] text-center font-bold text-white opacity-0 group-hover:opacity-100">市場溝通</div>
                                 </div>
+                                <div class="w-1/4 h-[70%] bg-gray-600 hover:bg-brand-red transition-all relative group flex flex-col justify-end">
+                                    <span class="absolute -top-6 left-0 text-[10px] text-gray-500 w-full text-center">階段三</span>
+                                    <div class="p-2 text-[10px] text-center font-bold text-white opacity-0 group-hover:opacity-100">開創業務</div>
+                                </div>
+                                <div class="w-1/4 h-[95%] bg-brand-red relative group flex flex-col justify-end shadow-[0_0_20px_rgba(230,0,35,0.4)]">
+                                    <span class="absolute -top-6 left-0 text-[10px] text-brand-red font-bold w-full text-center">階段四</span>
+                                    <div class="p-2 text-[10px] text-center font-bold text-white">品牌資產</div>
+                                </div>
+                                
+                                <!-- Curve SVG Overlay -->
+                                <svg class="absolute inset-0 w-full h-full pointer-events-none p-6 pb-0" preserveAspectRatio="none">
+                                    <path d="M0,180 Q100,160 200,100 T400,20" fill="none" stroke="white" stroke-width="2" stroke-dasharray="5,5" class="opacity-50" />
+                                </svg>
                             </div>
-                            <p class="text-sm text-gray-500 mt-4 text-center">這份成長路徑，將是我們未來每一次會議中，共同檢視、校準的核心依據。</p>
+                            <p class="text-xs text-gray-500 font-mono mt-4 text-center">這份成長路徑，將是我們未來每一次會議中，共同檢視、校準的核心依據。</p>
                         </div>
+
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 區塊五：整合的建築師 (視覺更新) -->
-        <section id="architects" class="py-20 md:py-32 bg-deep-black">
-            <div class="container mx-auto px-6 max-w-6xl">
-                <div class="text-center scroll-animate">
-                    <h2 class="text-white">策略與執行，我們無縫整合。</h2>
-                    <p class="max-w-3xl mx-auto text-lg text-gray-300 mb-12">
-                        市場最常見的失敗，源於「策略」與「執行」的斷層。黑匡國際的核心價值，就是消弭這個斷層。我們將頂層戰略與前線戰術完美融合，確保每一步行動都帶來可衡量的成果。選擇我們，您不僅避免浪費，還能加速品牌從本地到全球的躍升。
+        <!-- SCENE 05: THE INTEGRATED ARCHITECTS -->
+        <section class="relative min-h-screen bg-cinema-black pt-20">
+            <div class="container mx-auto px-6 text-center mb-16 fade-in-up">
+                <span class="text-brand-red font-mono text-xs tracking-widest uppercase">The Integrated Architects</span>
+                <h2 class="font-serif text-4xl md:text-5xl text-white mt-4 font-bold">策略與執行，我們無縫整合。</h2>
+                <div class="max-w-3xl mx-auto mt-8 text-gray-400 text-lg leading-relaxed">
+                    <p class="mb-6">市場最常見的失敗，源於「策略」與「執行」的斷層。黑匡國際的核心價值，就是消弭這個斷層。我們將頂層戰略與前線戰術完美融合，確保每一步行動都帶來可衡量的成果。</p>
+                    <p class="text-white border-l-2 border-brand-red pl-4 text-left italic font-serif">
+                        "我們厭倦偉大策略死於糟糕執行，也厭倦精良執行浪費在錯誤策略上。<br>
+                        黑匡國際，正是為解決這個產業痛點而生。"
                     </p>
-                    <div class="border-t border-b border-brand-red max-w-3xl mx-auto py-6 my-12">
-                         <p class="text-xl italic font-bold">
-                            我們厭倦偉大策略死於糟糕執行，也厭倦精良執行浪費在錯誤策略上。黑匡國際，正是為解決這個產業痛點而生——我們是少數能真正「三位一體」與「全球開拓」的團隊，讓您的護城河堅不可摧。
-                         </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row h-auto md:h-[80vh]">
+                <!-- Commander of Air Combat -->
+                <div class="w-full md:w-1/2 relative group overflow-hidden border-t border-b border-gray-900 border-r md:border-r border-gray-900">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-30 grayscale group-hover:grayscale-0" 
+                         style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto-format&fit=crop');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50"></div>
+                    
+                    <div class="absolute inset-0 p-8 md:p-12 flex flex-col justify-end z-10">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider mb-3 inline-block">Commander</span>
+                            <h3 class="text-3xl md:text-4xl font-serif font-bold text-white mb-2">線上「空戰」總指揮</h3>
+                            
+                            <!-- Venn Diagram Icon (CSS) -->
+                            <div class="flex gap-2 my-4">
+                                <div class="w-3 h-3 rounded-full border border-white/50 bg-white/10"></div>
+                                <div class="w-3 h-3 rounded-full border border-white/50 bg-white/10 -ml-1.5"></div>
+                                <div class="w-3 h-3 rounded-full border border-white/50 bg-white/10 -ml-1.5"></div>
+                                <span class="text-xs text-gray-400 ml-2 font-mono">三位一體優勢</span>
+                            </div>
+
+                            <p class="text-gray-300 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 max-w-md">
+                                以超過十年的市場實戰經驗，我們將無形品牌價值轉譯為動人腳本與影像，讓數位信號放大3倍以上——從曝光到轉化，一氣呵成。
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-start mt-20">
-                    <!-- 左欄：空戰 -->
-                    <div class="text-center scroll-animate flex flex-col h-full">
-                        <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=2680&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="線上空戰總指揮" class="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-4 border-secondary-gray">
-                        <h4 class="text-2xl font-bold mb-4">線上「空戰」的總指揮</h4>
-                        <!-- SVG 維恩圖 (視覺更新) -->
-                        <div class="flex-grow flex items-center justify-center my-6 h-48">
-                            <svg width="220" height="180" viewBox="0 0 220 180">
-                                <style>
-                                    .pulse-ring {
-                                        animation: pulse 4s ease-in-out infinite;
-                                        transform-origin: center;
-                                    }
-                                    @keyframes pulse {
-                                        0% { stroke-width: 1.5; stroke-opacity: 0.6; }
-                                        50% { stroke-width: 2.5; stroke-opacity: 1; }
-                                        100% { stroke-width: 1.5; stroke-opacity: 0.6; }
-                                    }
-                                    .ring-2 { animation-delay: 1.3s; }
-                                    .ring-3 { animation-delay: 2.6s; }
-                                </style>
-                                <defs>
-                                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                        <feMerge>
-                                            <feMergeNode in="coloredBlur"/>
-                                            <feMergeNode in="SourceGraphic"/>
-                                        </feMerge>
-                                    </filter>
-                                </defs>
-                                <!-- Rings and Labels -->
-                                <g>
-                                    <circle class="pulse-ring" cx="110" cy="60" r="45" fill="none" stroke="#E60023"/>
-                                    <text x="110" y="20" font-size="14" fill="#F5F5F5" text-anchor="middle">市場洞察</text>
-                                </g>
-                                <g>
-                                    <circle class="pulse-ring ring-2" cx="65" cy="120" r="45" fill="none" stroke="#E60023"/>
-                                    <text x="35" y="165" font-size="14" fill="#F5F5F5" text-anchor="middle">腳本創作</text>
-                                </g>
-                                <g>
-                                    <circle class="pulse-ring ring-3" cx="155" cy="120" r="45" fill="none" stroke="#E60023"/>
-                                    <text x="185" y="165" font-size="14" fill="#F5F5F5" text-anchor="middle">實際執行</text>
-                                </g>
-                                <!-- Central Text -->
-                                <text x="110" y="105" font-size="20" font-weight="bold" fill="#FFC107" text-anchor="middle" style="filter: url(#glow);">三位一體</text>
-                            </svg>
-                        </div>
-                        <p class="text-gray-400 text-left leading-relaxed mt-4">以超過十年的市場實戰經驗，我們是少數能將市場洞察、腳本創作與實際執行三位一體的專家。市場上，多數從業者只專精一兩項，導致內容有趣卻不轉單。我們則將無形品牌價值轉譯為動人腳本與影像，讓數位信號放大3倍以上——從曝光到轉化，一氣呵成，避免您的預算淪為無效煙火。</p>
+                <!-- Pioneer of Land Combat -->
+                <div class="w-full md:w-1/2 relative group overflow-hidden border-t border-b border-gray-900">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-30 grayscale group-hover:grayscale-0" 
+                         style="background-image: url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2698&auto-format&fit=crop');">
                     </div>
-                    <!-- 右欄：陸戰 -->
-                    <div class="text-center scroll-animate flex flex-col h-full" style="transition-delay: 200ms;">
-                         <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=2574&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="線下陸戰開拓者" class="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-4 border-secondary-gray">
-                        <h4 class="text-2xl font-bold mb-4">線下「陸戰」的開拓者</h4>
-                        <!-- SVG 世界地圖 -->
-                        <div class="flex-grow flex items-center justify-center my-6 h-48">
-                             <svg width="250" height="150" viewBox="0 0 250 150">
-                                <path d="M125 10 C 60 10, 20 75, 20 75 C 20 75, 60 140, 125 140 C 190 140, 230 75, 230 75 C 230 75, 190 10, 125 10 Z" fill="#111111" stroke="#444444" stroke-width="1"/>
-                                <path d="M40,75 C80,40 170,40 210,75" fill="none" stroke="#333333" stroke-width="1"/>
-                                <path d="M40,75 C80,110 170,110 210,75" fill="none" stroke="#333333" stroke-width="1"/>
-                                <path d="M125,10 V 140" fill="none" stroke="#333333" stroke-width="1"/>
-                                <circle cx="180" cy="85" r="5" fill="#E60023" filter="url(#glow)"/>
-                                <defs>
-                                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
-                                        <path d="M0,0 L0,4 L5,2 z" fill="#E60023" />
-                                    </marker>
-                                </defs>
-                                <path d="M180,85 Q140,40 80,50" stroke="#E60023" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-                                <path d="M180,85 Q210,60 220,30" stroke="#E60023" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-                                <path d="M180,85 Q190,120 160,130" stroke="#E60023" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-                                <text x="60" y="115" font-size="16" font-weight="bold" fill="#E60023" text-anchor="middle">全球開拓</text>
-                                <text x="60" y="135" font-size="12" fill="#F5F5F5" text-anchor="middle">進軍5國+</text>
-                            </svg>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50"></div>
+                    
+                    <div class="absolute inset-0 p-8 md:p-12 flex flex-col justify-end z-10">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider mb-3 inline-block">Pioneer</span>
+                            <h3 class="text-3xl md:text-4xl font-serif font-bold text-white mb-2">線下「陸戰」開拓者</h3>
+
+                            <!-- Map Icon (CSS) -->
+                            <div class="flex gap-2 my-4 items-center">
+                                <i data-lucide="globe" class="w-4 h-4 text-white/70"></i>
+                                <span class="text-xs text-gray-400 font-mono">進軍5國，營收增長2倍</span>
+                            </div>
+
+                            <p class="text-gray-300 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 max-w-md">
+                                我們將線上信號轉化為實際通路開發、商務談判與營收增長——從本土優勢出發，駕馭全球規則，讓您的產品不僅進軍國際，還能帶來持續性收益。
+                            </p>
                         </div>
-                        <p class="text-gray-400 text-left leading-relaxed mt-4">憑藉稀有將台灣品牌成功推向世界的實戰經驗，我們是少數具備強悍國際市場know-how的開拓者。多數線下專家侷限國內，無法應對跨國挑戰。我們則將線上信號轉化為實際通路開發、商務談判與營收增長——從本土優勢出發，駕馭全球規則，讓您的產品不僅進軍國際，還能帶來持續性收益，避免流量斷層的遺憾。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 區塊六：對話的邀請 -->
-        <section id="invitation" class="py-20 md:py-32 bg-primary-gray">
-             <div class="container mx-auto px-6 text-center scroll-animate">
-                <h2 class="text-4xl md:text-5xl font-black leading-tight">一場清醒的對話，<br>勝過無數次盲目的投放。</h2>
-                <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-12">我們的第一次會議，不是銷售簡報，而是一場「藍圖探索會議」。<br>讓我們一起，將您的煩惱，轉化為清晰的行動路徑。</p>
-                <a href="https://lin.ee/b80hLU4" target="_blank" class="bg-brand-red text-white font-bold text-xl py-4 px-10 rounded-lg inline-block hover:bg-red-700 hover:scale-105 transform transition-all duration-300">
-                    預約藍圖探索會議
+        <!-- SCENE 06: THE INVITATION (Footer) -->
+        <footer class="py-32 px-6 text-center relative border-t border-gray-900 bg-cinema-black">
+            <div class="max-w-4xl mx-auto fade-in-up">
+                <span class="text-brand-red font-mono text-xs tracking-widest uppercase mb-6 block">The Final Scene</span>
+                
+                <h2 class="font-serif text-4xl md:text-6xl text-white mb-10 leading-tight">
+                    一場清醒的對話，<br>勝過無數次盲目的投放。
+                </h2>
+                
+                <p class="text-gray-400 mb-16 text-lg max-w-2xl mx-auto">
+                    我們的第一次會議，不是銷售簡報，而是一場<b>「藍圖探索會議」</b>。<br>
+                    讓我們一起，將您的煩惱，轉化為清晰的行動路徑。
+                </p>
+
+                <a href="https://lin.ee/b80hLU4" target="_blank" class="inline-flex items-center gap-4 relative group px-12 py-6 overflow-hidden bg-brand-red text-white transition-all hover:bg-white hover:text-brand-red">
+                    <span class="relative z-10 font-bold tracking-widest uppercase">
+                        預約藍圖探索會議
+                    </span>
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                 </a>
-             </div>
-        </section>
+
+                <!-- Credits -->
+                <div class="mt-32 pt-12 border-t border-gray-900 grid grid-cols-1 md:grid-cols-3 gap-8 text-[10px] uppercase tracking-widest text-gray-600 font-mono">
+                    <div>
+                        &copy; 2024 Black Frames International
+                    </div>
+                    <div>
+                        Strategy / Creative / Production
+                    </div>
+                    <div>
+                        Taipei / Global
+                    </div>
+                </div>
+            </div>
+        </footer>
+
     </main>
-    
-    <footer class="bg-deep-black py-6 text-center text-gray-500 text-sm">
-        <p>&copy; 2024 KUROSHIO INTERNATIONAL. All Rights Reserved.</p>
-    </footer>
 
     <script>
-        // 藍圖區塊互動功能
-        const blueprintNav = document.querySelector('.blueprint-nav');
-        const navButtons = blueprintNav.querySelectorAll('button');
-        const contentPanes = document.querySelectorAll('.blueprint-content');
+        // Initialize Icons
+        lucide.createIcons();
 
-        blueprintNav.addEventListener('click', function(e) {
-            if (e.target.tagName === 'BUTTON') {
-                const button = e.target.closest('button');
-                if (!button) return;
-
-                // 移除所有按鈕的 active 狀態
-                navButtons.forEach(btn => btn.classList.remove('active'));
-                // 為點擊的按鈕加上 active 狀態
-                button.classList.add('active');
-
-                const targetId = button.getAttribute('data-target');
-                
-                // 隱藏所有內容
-                contentPanes.forEach(pane => pane.classList.remove('active'));
-                // 顯示目標內容
-                document.getElementById(targetId).classList.add('active');
-            }
-        });
-
-        // 滾動動畫功能
-        const animatedElements = document.querySelectorAll('.scroll-animate');
-
+        // Intersection Observer for scroll animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
+                    entry.target.classList.add('visible');
                 }
             });
-        }, {
-            threshold: 0.1 // 元素進入畫面 10% 時觸發
-        });
+        }, { threshold: 0.1 });
 
-        animatedElements.forEach(el => {
+        document.querySelectorAll('.fade-in-up').forEach((el) => {
             observer.observe(el);
         });
 
+        // Tab Switching Logic for Blueprint Section
+        function switchTab(tabId, btnElement) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update active state of buttons
+            document.querySelectorAll('.blueprint-item').forEach(btn => {
+                btn.classList.remove('active', 'border-brand-red', 'bg-gray-900/30');
+                btn.classList.add('border-transparent');
+                
+                // Reset text colors
+                const title = btn.querySelector('h3');
+                const subtitle = btn.querySelector('span');
+                if(title) {
+                    title.classList.remove('text-brand-red');
+                    title.classList.add('text-gray-300');
+                }
+                if(subtitle) {
+                    subtitle.classList.remove('text-brand-red');
+                    subtitle.classList.add('text-gray-500');
+                }
+            });
+            
+            // Set active styles for clicked button
+            btnElement.classList.add('active', 'border-brand-red', 'bg-gray-900/30');
+            btnElement.classList.remove('border-transparent');
+            
+            const activeTitle = btnElement.querySelector('h3');
+            const activeSubtitle = btnElement.querySelector('span');
+            if(activeTitle) {
+                activeTitle.classList.add('text-brand-red');
+                activeTitle.classList.remove('text-gray-300');
+            }
+            if(activeSubtitle) {
+                activeSubtitle.classList.add('text-brand-red');
+                activeSubtitle.classList.remove('text-gray-500');
+            }
+        }
     </script>
 </body>
 </html>
-
-
